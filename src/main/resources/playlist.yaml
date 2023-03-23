@@ -1,0 +1,88 @@
+openapi: 3.0.2
+info:
+  title: Playlist API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /playlist/{id}:
+    get:
+      operationId: getPlaylist
+      summary: Get playlist
+      parameters:
+        - name: id
+          in: path
+          description: ID of the playlist to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /playlist:
+    post:
+      summary: Creates a new playlist.
+      operationId: createPlaylist
+      requestBody:
+        description: The playlist to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Song'
+      responses:
+        '201':
+          description: Playlist created.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Song:
+      type: object
+      properties:
+        artist:
+          type: string
+        title:
+          type: string
+      required:
+        - artist
+        - title
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
